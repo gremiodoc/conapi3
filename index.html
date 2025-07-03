@@ -40,12 +40,20 @@
       margin-top: 1rem;
       font-weight: bold;
     }
+    #tasa-bcv {
+      margin-bottom: 1rem;
+      font-size: 1rem;
+      color: #333;
+      text-align: center;
+      font-weight: bold;
+    }
   </style>
 </head>
 <body>
-  <img id="logo" src="gremiodocente-logo.png" alt="Logo GremioDocente">
+  <img id="logo" src="/mnt/data/gremiodocente-logo.png" alt="Logo GremioDocente">
   <h1>Cálculo de Vacaciones Docentes 2025</h1>
   <div class="calculator">
+    <div id="tasa-bcv">Tasa BCV: Cargando...</div>
     <label for="salario">Salario Quincenal (sin descuentos):</label>
     <input type="number" id="salario" placeholder="Introduce tu salario quincenal">
     <button onclick="calcularVacaciones()">Calcular</button>
@@ -60,8 +68,14 @@
         const data = await response.json();
         return parseFloat(data?.monitors?.bcv?.price || 109);
       } catch (e) {
-        return 109;
+        return 109; // valor por defecto
       }
+    }
+
+    async function mostrarTasaBCV() {
+      const tasa = await obtenerTasaBCV();
+      document.getElementById("tasa-bcv").textContent = `Tasa BCV: Bs ${tasa.toFixed(2)} por dólar`;
+      return tasa;
     }
 
     async function calcularVacaciones() {
@@ -90,6 +104,10 @@
       document.getElementById("salario").value = "";
       document.getElementById("resultado").innerHTML = "";
     }
+
+    // Mostrar tasa al cargar
+    mostrarTasaBCV();
   </script>
 </body>
 </html>
+
